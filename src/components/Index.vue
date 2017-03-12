@@ -1,6 +1,7 @@
 <template>
   <div class="container">
   <h1 v-if='error'>Error retrieving data</h1>
+  <h1 v-if='loading'>Loading current SDN list</h1>
   <div class="input">
     <label>Name:</label>
     <input type='text' v-model="search">
@@ -9,7 +10,7 @@
     <input type='checkbox' id='entityCheckbox' v-model='showEntities'>
     <label for='entityCheckbox'>Entities</label>
   </div>
-  <div class="table">
+  <div class="table" v-if='!loading'>
     <table v-if='showIndividuals'>
       <thead v-if='filteredIndividuals.length > 0'>
         <tr>
@@ -56,6 +57,7 @@ export default {
       showEntities: true,
       search: '',
       error: false,
+      loading: true,
     }
   },
   methods: {
@@ -70,6 +72,7 @@ export default {
     getSDNEntities: function() {
       this.$http.get('http://127.0.0.1:5000/entities').then(response => {
         this.entities = response.body;
+        this.loading = false;
         }, response => {
           this.error = true;
         }
@@ -80,12 +83,12 @@ export default {
     filteredIndividuals: function() {
       return this.individuals.filter(individual => {
         return individual.name.indexOf(this.search.toUpperCase()) > -1
-      })
+      });
     },
     filteredEntities: function() {
       return this.entities.filter(entity => {
         return entity.name.indexOf(this.search.toUpperCase()) > -1
-      })
+      });
     },
     isInput: function() {
       return (this.search.length > 2);
