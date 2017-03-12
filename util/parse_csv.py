@@ -1,19 +1,24 @@
 #!/usr/bin/env python3
 
-import csv, sys, os
-list_loc = os.path.abspath('./util/sdn.csv')
+import csv, requests
+url = 'https://www.treasury.gov/ofac/downloads/sdn.csv'
 
 def read_sdn_list():
-  with open(list_loc, 'rt') as list:
-    list_reader = csv.reader(list)
-    sdn_list = []
-    for row in list_reader:
-      sdn_list.append(row)
+
+# download FINCEN SDN list and turn it into a Python list
+  with requests.Session() as s:
+    download = s.get(url)
+    decoded = download.content.decode('utf-8')
+    cr = csv.reader(decoded.splitlines())
+    sdn_list = list(cr)
+
+# fix various formatting eccentricities 
     del(sdn_list[-1])
     for row in sdn_list:
       if row[1][0] == "'":
         row[1] = row[1][1:]
 
+# split list into individuals and entities; take relevant data; alphabetize
     individuals = [
                   { 'id':       int(row[0].strip()), 
                     'name':     row[1].upper().strip(), 
@@ -29,3 +34,6 @@ def read_sdn_list():
     entities = sorted(entities, key=lambda x:x['name'])
 
     return {'individuals': individuals, 'entities': entities}
+
+if __name__ == '__main__':
+  print(read_sdn_list())
