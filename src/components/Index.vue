@@ -2,15 +2,16 @@
   <div class="container">
   <h1 v-if='error'>Error retrieving data</h1>
   <h1 v-if='loading'>Loading current SDN list</h1>
+  <h1 v-if='!loading'>SDN List Search</h1>
   <div class="input">
-    <label>Name:</label>
+    <label>Enter a name:</label>
     <input type='text' v-model="search">
     <input type='checkbox' id='indCheckbox' v-model='showIndividuals'>
     <label for='indCheckbox'>Individuals</label>  
     <input type='checkbox' id='entityCheckbox' v-model='showEntities'>
     <label for='entityCheckbox'>Entities</label>
   </div>
-  <div class="table" v-if='!loading'>
+  <div class="table" v-if='!loading && isInput'>
     <table v-if='showIndividuals'>
       <thead v-if='filteredIndividuals.length > 0'>
         <tr>
@@ -25,21 +26,23 @@
         </tr>
       </tbody>
     </table>
-    <h3 v-if='filteredIndividuals.length ==0 && showIndividuals'>No matching individuals</h3>
+    <h2 v-if='filteredIndividuals.length ==0 && showIndividuals'>No matching individuals</h2>
     <div id="entity-table" v-if='showEntities'>
       <table>
         <thead v-if='filteredEntities.length > 0'>
           <tr>
             <th>Entity Name</th>
+            <th>Details</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="entity in filteredEntities">
             <td>{{ entity.name }}</td>
+            <td>{{ entity.details }}</td>
           </tr>
         </tbody>
       </table>
-      <h3 v-if='filteredEntities.length == 0'>No matching entities</h3>
+      <h2 v-if='filteredEntities.length == 0'>No matching entities</h2>
       </div>
     </div>
   </div>
@@ -91,7 +94,7 @@ export default {
       });
     },
     isInput: function() {
-      return (this.search.length > 2);
+      return (this.search.length > 1);
     },
   },
   created: function() {

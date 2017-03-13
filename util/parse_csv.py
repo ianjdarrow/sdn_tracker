@@ -27,7 +27,8 @@ def read_sdn_list():
 
     entities = [
                   { 'id':       int(row[0]), 
-                    'name':     row[1].upper()
+                    'name':     row[1].upper().strip(),
+                    'details':  row[3].strip()
                   } for row in sdn_list if row[2] != 'individual']
 
     individuals = sorted(individuals, key=lambda x:x['name'])
