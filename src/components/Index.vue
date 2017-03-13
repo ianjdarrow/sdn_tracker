@@ -1,8 +1,7 @@
 <template>
   <div class="container">
-  <h1 v-if='loading'>Loading current SDN list</h1>
+  <h1>SDN List Search <span v-if='loading'>(loading most recent)</span></h1>
   <h1 v-if='error'>Error retrieving data</h1>
-  <h1 v-else>SDN List Search</h1>
   <div class="input">
     <label>Enter a name:</label>
     <input type='text' v-model="search">
@@ -13,12 +12,12 @@
   </div>
   <div class="table" v-if='!loading && isInput'>
     <div id="ind-table" v-if='showIndividuals'>
-      <h3>{{ filteredIndividuals.length }} individuals</h3>
+      <h3>Individuals: {{ filteredIndividuals.length }}</h3>
       <table>
         <thead v-if='filteredIndividuals.length > 0'>
           <tr>
             <th class="ind-name">Name</th>
-            <th>Details</th>
+            <th class="ind-details">Details</th>
           </tr>
         </thead>
         <tbody>
@@ -30,12 +29,12 @@
       </table>
     </div>
     <div id="entity-table" v-if='showEntities'>
-      <h3>{{ filteredEntities.length }} entities</h3>
+      <h3>Entities: {{ filteredEntities.length }}</h3>
       <table>
         <thead v-if='filteredEntities.length > 0'>
           <tr>
-            <th>Entity Name</th>
-            <th>Affiliation</th>
+            <th class="entity-name">Entity Name</th>
+            <th class="entity-details">Affiliation</th>
           </tr>
         </thead>
         <tbody>
@@ -110,8 +109,8 @@ export default {
 <style scoped>
 
 th, td {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 12px;
+  padding-bottom: 12px;
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
@@ -119,10 +118,21 @@ th, td {
 tr {
   height: 25px;
   vertical-align: top;
-  line-height: 1.3em;
+  line-height: 1.35em;
 }
 
 .ind-name {
+  width: 30%;
+}
+.ind-details {
+  width: 70%;
+}
+
+.entity-name {
+  width: 70%;
+}
+
+.entity-details {
   width: 30%;
 }
 
