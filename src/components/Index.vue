@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-  <h1 v-if='error'>Error retrieving data</h1>
   <h1 v-if='loading'>Loading current SDN list</h1>
-  <h1 v-if='!loading'>SDN List Search</h1>
+  <h1 v-if='error'>Error retrieving data</h1>
+  <h1 v-else>SDN List Search</h1>
   <div class="input">
     <label>Enter a name:</label>
     <input type='text' v-model="search">
@@ -12,27 +12,30 @@
     <label for='entityCheckbox'>Entities</label>
   </div>
   <div class="table" v-if='!loading && isInput'>
-    <table v-if='showIndividuals'>
-      <thead v-if='filteredIndividuals.length > 0'>
-        <tr>
-          <th class="ind-name">Name</th>
-          <th>Details</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="individual in filteredIndividuals">
-          <td>{{ individual.name }}</td>
-          <td>{{ individual.details }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <h2 v-if='filteredIndividuals.length ==0 && showIndividuals'>No matching individuals</h2>
+    <div id="ind-table" v-if='showIndividuals'>
+      <h3>{{ filteredIndividuals.length }} individuals</h3>
+      <table>
+        <thead v-if='filteredIndividuals.length > 0'>
+          <tr>
+            <th class="ind-name">Name</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="individual in filteredIndividuals">
+            <td>{{ individual.name }}</td>
+            <td>{{ individual.details }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <div id="entity-table" v-if='showEntities'>
+      <h3>{{ filteredEntities.length }} entities</h3>
       <table>
         <thead v-if='filteredEntities.length > 0'>
           <tr>
             <th>Entity Name</th>
-            <th>Details</th>
+            <th>Affiliation</th>
           </tr>
         </thead>
         <tbody>
@@ -42,7 +45,6 @@
           </tr>
         </tbody>
       </table>
-      <h2 v-if='filteredEntities.length == 0'>No matching entities</h2>
       </div>
     </div>
   </div>
