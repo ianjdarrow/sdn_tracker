@@ -16,5 +16,5 @@ python3 app.py
 npm run dev
 ```
 
-##License
+## License
 MIT
