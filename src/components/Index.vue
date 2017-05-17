@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" id="content">
   <div class="row">
     <div class="eight columns">
       <h2>SDN List Search <span v-if='loading'>(loading most recent)</span></h2>
@@ -11,7 +11,7 @@
   </div>
   <div class="row">
     <div class="four columns">
-      <input type='text' class="input" v-model="search" placeholder="Enter a name">
+      <input type='text' class="input" v-model="search" placeholder="Enter a name" :disabled="error || loading">
     </div>
     <div class="two columns">
       <input type='checkbox' id='indCheckbox' v-model='showIndividuals'>
@@ -57,6 +57,11 @@
         </tbody>
       </table>
       </div>
+      <div class="row">
+      </div>
+    </div>
+    <div class="twelve columns footer">
+      <p>Made by <a href="mailto:ian@ledgerx.com">Ian</a> in 2017 (<a href="https://github.com/ianjdarrow/sdn_tracker">Github</a>)</p>
     </div>
   </div>
 </template>
@@ -133,6 +138,10 @@ label {
   display: inline-block;
 }
 
+#content {
+  min-height: 90vh;
+}
+
 #logoContainer {
     height: 60px;  
     align-items: flex-end;
@@ -141,12 +150,16 @@ label {
 }
 
 #logo {
-  padding-top: 10px;
+  margin-top: 10px;
   align-self: flex-end;
 }
 
 .input {
   width: 100%;
+}
+
+.results {
+
 }
 
 .name-column {
@@ -155,6 +168,16 @@ label {
 
 .info-column {
   width: 67%;
+}
+
+.footer {
+  text-align: center;
+  font-weight: lighter;
+  color: #999;
+  height:60px;
+  position: absolute;
+  bottom: 0;
+  padding-top: 60px;
 }
 
 

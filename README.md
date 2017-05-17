@@ -1,6 +1,6 @@
 # sdn_tracker
 
-> Check client names against FINCEN SDN list
+Check client names against FINCEN SDN list
 
 ## Build Setup
 
@@ -14,3 +14,7 @@ python3 app.py
 
 # serve with hot reload at localhost:8080
 npm run dev
+```
+
+##License
+MIT

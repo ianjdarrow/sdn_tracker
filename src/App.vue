@@ -18,4 +18,9 @@ export default {
   color: #222;
   margin-top: 60px;
 }
+
+a {
+  text-decoration: none;
+}
+
 </style>

@@ -13,12 +13,13 @@ last_pull = time_util()
 @app.route('/list')
 def individuals():
 	global l, last_pull
-	if time_util() - last_pull > 60 * 10:
+	delta = time_util() - last_pull
+	if delta > 60 * 10:
 		print("Refreshing list as of ", time_util())
 		l = read_sdn_list()
 		last_pull = time_util()
 	else:
-		print("Serving cached list from ", last_pull)
+		print("Serving cached list from ", last_pull, "-", 10*60 - delta, " seconds remaining")
 	return jsonify(l)
 
 if __name__ == '__main__':
