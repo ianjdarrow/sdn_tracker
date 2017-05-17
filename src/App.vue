@@ -15,9 +15,7 @@ export default {
   font-family: sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+  color: #222;
   margin-top: 60px;
-  margin-left: 60px;
-  margin-right: 60px;
 }
 </style>

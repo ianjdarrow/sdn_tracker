@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import csv, requests
+import csv, requests, time
 url = 'https://www.treasury.gov/ofac/downloads/sdn.csv'
 
 def read_sdn_list():
@@ -35,6 +35,9 @@ def read_sdn_list():
     entities = sorted(entities, key=lambda x:x['name'])
 
     return {'individuals': individuals, 'entities': entities}
+
+def time_util():
+  return int(time.mktime(time.gmtime()))
 
 if __name__ == '__main__':
   print(read_sdn_list())

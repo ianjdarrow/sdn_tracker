@@ -1,25 +1,25 @@
 #!/usr/bin/env python3
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify
 from flask_cors import CORS
-from util.parse_csv import read_sdn_list
+from util.parse_csv import read_sdn_list, time_util
 
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/')
-def index():
-  return "<h1>Index page</h1>"
+l = read_sdn_list()
+last_pull = time_util()
 
-@app.route('/individuals')
+@app.route('/list')
 def individuals():
-  l = read_sdn_list()
-  return jsonify(l['individuals'])
-
-@app.route('/entities')
-def entities():
-  l = read_sdn_list()
-  return jsonify(l['entities'])
+	global l, last_pull
+	if time_util() - last_pull > 60 * 10:
+		print("Refreshing list as of ", time_util())
+		l = read_sdn_list()
+		last_pull = time_util()
+	else:
+		print("Serving cached list from ", last_pull)
+	return jsonify(l)
 
 if __name__ == '__main__':
-  app.run(debug=True)
+	app.run(debug=True)
