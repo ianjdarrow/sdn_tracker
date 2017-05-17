@@ -34,7 +34,7 @@
         </thead>
         <tbody>
           <tr v-for="individual in filteredIndividuals">
-            <td>{{ individual.name }}</td>
+            <td>{{ individual.lastName }}, {{ individual.firstName }}</td>
             <td>{{ individual.details }}</td>
           </tr>
         </tbody>
@@ -46,13 +46,17 @@
         <thead v-if='filteredEntities.length > 0'>
           <tr>
             <th class="name-column">Entity Name</th>
-            <th class="info-column">Affiliation</th>
+            <th class="info-column">Details</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="entity in filteredEntities">
             <td>{{ entity.name }}</td>
-            <td>{{ entity.details }}</td>
+            <td>
+              <ul>
+                <li v-for="detail in entity.details">{{ detail }}</li>
+              </ul>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -100,7 +104,7 @@ export default {
   computed: {
     filteredIndividuals: function() {
       return this.sdnList.individuals.filter(individual => {
-        return individual.name.indexOf(this.search.toUpperCase()) > -1
+        return individual.lastName.indexOf(this.search.toUpperCase()) > -1
       });
     },
     filteredEntities: function() {
@@ -129,13 +133,17 @@ th, td {
 }
 
 tr {
-  height: 25px;
+  min-height: 25px;
   vertical-align: top;
   line-height: 1.35em;
 }
 
 label {
   display: inline-block;
+}
+
+li {
+  list-style-type: none;
 }
 
 #content {
