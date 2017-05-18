@@ -29,4 +29,4 @@ def get_tags():
 
 if __name__ == '__main__':
 	print("Spinning up API server")
-	app.run(host='0.0.0.0', debug=True)
+	app.run(host='0.0.0.0')

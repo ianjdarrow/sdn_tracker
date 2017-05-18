@@ -104,7 +104,7 @@ export default {
   },
   methods: {
     getSDNList: function() {
-      this.$http.get('http://127.0.0.1:5000/list').then(response => {
+      this.$http.get('http://localhost:5000/list').then(response => {
         this.sdnList.individuals = response.body.individuals;
         this.sdnList.entities = response.body.entities;
         this.loading = false;
