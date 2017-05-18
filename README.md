@@ -1,6 +1,6 @@
 # sdn_tracker
 
-Check client names against FINCEN SDN list
+A simple UI to check client names against the OFAC SDN list
 
 ## Build Setup
 
@@ -9,10 +9,15 @@ Check client names against FINCEN SDN list
 npm install
 pip3 install -r requirements.txt
 
+## live dangerously
+
+./startup.sh
+
+## or, live safely -
 # start Flask API server
 python3 app.py
 
-# serve with hot reload at localhost:8080
+# served with hot reload at localhost:8080
 npm run dev
 ```
 
