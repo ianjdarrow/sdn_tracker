@@ -28,7 +28,7 @@
   <div v-if='!isInput' class="poke-div">
     <h3 class="poke-text">Start typing to search results</h3>
   </div>
-  <div v-if='isInput'>
+  <div v-if='isInput && !loading'>
     <div id="ind-table" v-if='showIndividuals'>
       <h4>Individuals: {{ filteredIndividuals.length }}</h4>
       <table class="twelve columns">
@@ -102,15 +102,16 @@ export default {
   watch: {
     input: function() {
       this.updateSearch();
-    }
+    },
   },
   methods: {
     getSDNList: function(search) {
-      this.loading = true;
+      // this.loading = true;
       this.$http.get('http://127.0.0.1:5000/list/' + search).then(response => {
         this.sdnList.individuals = response.body.individuals;
         this.sdnList.entities = response.body.entities;
         this.loading = false;
+        this.error = false;
           Vue.nextTick(() => {  
             this.$refs.inputs.focus();
           });

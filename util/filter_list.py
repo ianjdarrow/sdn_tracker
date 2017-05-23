@@ -4,7 +4,7 @@ from fuzzywuzzy import fuzz, process
 from util.parse_csv import read_sdn_list
 import time
 
-LEV_CUTOFF = 85
+LEV_CUTOFF = 78
 
 def filter_list(items, search):
 	start_time = time.time()
