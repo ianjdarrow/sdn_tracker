@@ -6,7 +6,7 @@
         <h2>SDN List Search</h2>
         <div v-if="loading" class="loader"><img src="../../static/squares.svg"></div>
       </div>
-      <h3 v-if='error'>Error retrieving data</h3>
+      <h4 v-if='error' class="error">Error retrieving data</h4>
     </div>
     <div id="logoContainer" class="four columns">
     <img id="logo" src="../../static/lx.png" alt="LedgerX">
@@ -14,7 +14,7 @@
   </div>
   <div class="row">
     <div class="eight columns">
-      <input type='text' class="input" v-model="input" placeholder="Enter a name" :disabled="error || loading">
+      <input type='text' ref="inputs" class="input" v-model="input" placeholder="Enter a name" :disabled="error || loading">
     </div>
     <div class="two columns checkboxes">
       <input type='checkbox' id='indCheckbox' v-model='showIndividuals'>
@@ -25,10 +25,10 @@
       <label for='entityCheckbox'>Entities</label>
     </div>
   </div>
-  <div v-if='!loading && !isInput' class="poke-div">
-    <h3 class="poke-text">Start typing to filter results ({{sdnList.individuals.length + sdnList.entities.length}} total)</h3>
+  <div v-if='!isInput' class="poke-div">
+    <h3 class="poke-text">Start typing to search results</h3>
   </div>
-  <div v-if='!loading && isInput'>
+  <div v-if='isInput'>
     <div id="ind-table" v-if='showIndividuals'>
       <h4>Individuals: {{ filteredIndividuals.length }}</h4>
       <table class="twelve columns">
@@ -78,7 +78,9 @@
 
 <script>
 
+import Vue from 'vue'
 import debounce from 'debounce'
+import throttle from 'lodash.throttle'
 
 export default {
   name: 'index',
@@ -94,7 +96,7 @@ export default {
       input: '',
       search: '',
       error: false,
-      loading: true,
+      loading: false,
     }
   },
   watch: {
@@ -103,20 +105,27 @@ export default {
     }
   },
   methods: {
-    getSDNList: function() {
-      this.$http.get('http://localhost:5000/list').then(response => {
+    getSDNList: function(search) {
+      this.loading = true;
+      this.$http.get('http://127.0.0.1:5000/list/' + search).then(response => {
         this.sdnList.individuals = response.body.individuals;
         this.sdnList.entities = response.body.entities;
         this.loading = false;
+          Vue.nextTick(() => {  
+            this.$refs.inputs.focus();
+          });
         }, response => {
           this.error = true;
           this.loading = false;
         }
       );
     },
-    updateSearch: debounce(function () {
+    updateSearch: throttle(function () {
       this.search = this.input;
-    }, 200),
+      if (this.isInput) {
+        this.getSDNList(this.search);
+      }
+    }, 500),
   },
   computed: {
     filteredIndividuals: function() {
@@ -130,11 +139,13 @@ export default {
       });
     }, 
     isInput: function() {
-      return (this.search.length > 1);
+      return (this.search.length > 2);
     },
   },
   created: function() {
-    this.getSDNList();
+    Vue.nextTick(() => {  
+      this.$refs.inputs.focus();
+    });
   }
 }
 </script>
@@ -179,6 +190,9 @@ input {
   position: absolute;
   top: -8px;
   left: 300px;
+}
+.error {
+  color: #d00;
 }
 .input {
   width: 100%;

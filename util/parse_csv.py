@@ -43,12 +43,12 @@ def read_sdn_list():
         except:
           pass
 
-    print('complete.')
+    print('completed at %s.' % time_util())
 
     individuals = sorted(individuals, key=lambda x:x['lastName'])
     entities = sorted(entities, key=lambda x:x['name'])
 
-    return {'individuals': individuals, 'entities': entities}
+    return { 'individuals': individuals, 'entities': entities }
 
 def time_util():
   return int(time.mktime(time.gmtime()))
