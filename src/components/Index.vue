@@ -14,7 +14,7 @@
   </div>
   <div class="row">
     <div class="eight columns">
-      <input type='text' ref="inputs" class="input" v-model="input" placeholder="Enter a keyword" :disabled="error || loading">
+      <input type='text' ref="inputs" class="input" v-model="input" placeholder="Last name or company" :disabled="error || loading">
     </div>
     <div class="two columns checkboxes">
       <input type='checkbox' id='indCheckbox' v-model='showIndividuals'>
@@ -25,10 +25,10 @@
       <label for='entityCheckbox'>Entities</label>
     </div>
   </div>
-  <div v-if='!isInput' class="poke-div">
-    <h3 class="poke-text">Start typing to search results</h3>
+  <div v-if='!ready' class="poke-div">
+    <h3 class="poke-text">Start typing to view results</h3>
   </div>
-  <div v-if='isInput && !loading'>
+  <div v-if='ready'>
     <div id="ind-table" v-if='showIndividuals'>
       <h4>Individuals: {{ sdnList.individuals.length }}</h4>
       <table class="twelve columns">
@@ -83,7 +83,6 @@
 
 import Vue from 'vue'
 import debounce from 'debounce'
-import throttle from 'lodash.throttle'
 
 export default {
   name: 'index',
@@ -97,42 +96,44 @@ export default {
       showIndividuals: true,
       showEntities: true,
       input: '',
-      search: '',
       error: false,
       loading: false,
+      ready: false,
     }
   },
   watch: {
     input: function() {
-      this.updateSearch();
+      if (this.isInput) {
+        this.updateSearch();
+      } else {
+        this.ready = false;
+      }
     },
   },
   methods: {
     getSDNList: function(search) {
-      // this.loading = true;
       this.$http.get('http://127.0.0.1:5000/list/' + search).then(response => {
           this.sdnList = response.body;
+          this.ready = true;
+          this.error = false;
           Vue.nextTick(() => {  
-            this.loading = false;
-            this.error = false;
             this.$refs.inputs.focus();
           });
         }, response => {
           this.error = true;
-          this.loading = false;
+          this.ready = false;
         }
       );
     },
-    updateSearch: debounce(throttle(function () {
-      this.search = this.input;
+    updateSearch: debounce(function () {
       if (this.isInput) {
-        this.getSDNList(this.search);
+        this.getSDNList(this.input);
       }
-    }, 1000), 250),
+    }, 300),
   },
   computed: {
     isInput: function() {
-      return (this.search.trim().length > 2);
+      return this.input.trim().length > 2;
     },
   },
   created: function() {

@@ -21,7 +21,7 @@ def read_sdn_list():
       if row[1][0] == "'":
         row[1] = row[1][1:]
 
-# split list into individuals and entities; take relevant data; alphabetize
+# split list into individuals and entities; reduce to relevant data
     print('Formatting data... ', end='')
     individuals = [
                   { 'id':            int(row[0].strip()), 
@@ -31,9 +31,9 @@ def read_sdn_list():
                   } for row in sdn_list if row[2] == 'individual']
 
     entities = [
-                  { 'id':       int(row[0]), 
-                    'name':     row[1].upper().strip(),
-                    'details':  row[3].strip().replace('[', '').replace(']', '').split(' ')
+                  { 'id':           int(row[0]), 
+                    'name':         row[1].upper().strip(),
+                    'details':      row[3].strip().replace('[', '').replace(']', '').split(' ')
                   } for row in sdn_list if row[2] != 'individual']
 
     for entity in entities:
@@ -44,9 +44,6 @@ def read_sdn_list():
           pass
 
     print('completed at %s.' % time_util())
-
-    individuals = sorted(individuals, key=lambda x:x['lastName'])
-    entities = sorted(entities, key=lambda x:x['name'])
 
     return { 'individuals': individuals, 'entities': entities }
 
