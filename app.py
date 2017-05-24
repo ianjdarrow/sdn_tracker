@@ -26,7 +26,7 @@ async def load_files(app, loop):
 
 @app.route('/list/<search>')
 async def sdn_list(request, search):
-	result = filter_list(l, search.upper())
+	result = filter_list(l, search.upper().replace('%20', ' '))
 	return response.json(result)
 
 @app.route('/tags')

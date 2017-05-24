@@ -14,7 +14,7 @@ pip3 install -r requirements.txt
 ./startup.sh
 
 ## or, live safely -
-# start Flask API server
+# start Sanic API server
 python3 app.py
 
 # served with hot reload at localhost:8080

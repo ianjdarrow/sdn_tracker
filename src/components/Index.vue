@@ -40,7 +40,9 @@
         </thead>
         <tbody>
           <tr v-for="individual in sdnList.individuals">
-            <td :class="{ error: individual.score > 90 }">{{ individual.lastName }}, {{ individual.firstName }}</td>
+            <td :class="{ error: individual.score > 88 }">
+              {{ individual.lastName }}, {{ individual.firstName }}
+            </td>
             <td>{{ individual.details }}</td>
           </tr>
         </tbody>
@@ -57,7 +59,8 @@
         </thead>
         <tbody>
           <tr v-for="entity in sdnList.entities">
-            <td>{{ entity.name }}</td>
+            <td :class="{ error: entity.score > 88 }">
+              {{ entity.name }}</td>
             <td>
               <ul>
                 <li v-for="detail in entity.details">{{ detail }}</li>
@@ -108,11 +111,10 @@ export default {
     getSDNList: function(search) {
       // this.loading = true;
       this.$http.get('http://127.0.0.1:5000/list/' + search).then(response => {
-        this.sdnList = response.body;
-        console.log(this.sdnList.individuals);
-        this.loading = false;
-        this.error = false;
+          this.sdnList = response.body;
           Vue.nextTick(() => {  
+            this.loading = false;
+            this.error = false;
             this.$refs.inputs.focus();
           });
         }, response => {
@@ -126,21 +128,11 @@ export default {
       if (this.isInput) {
         this.getSDNList(this.search);
       }
-    }, 1000), 300),
+    }, 750), 300),
   },
   computed: {
-    filteredIndividuals: function() {
-      return this.sdnList.individuals.filter(individual => {
-        return individual.lastName.indexOf(this.search.toUpperCase()) > -1
-      });
-    }, 
-    filteredEntities: function() {
-      return this.sdnList.entities.filter(entity => {
-        return entity.name.indexOf(this.search.toUpperCase()) > -1
-      });
-    }, 
     isInput: function() {
-      return (this.search.length > 2);
+      return (this.search.trim().length > 2);
     },
   },
   created: function() {
