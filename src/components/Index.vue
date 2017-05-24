@@ -14,7 +14,7 @@
   </div>
   <div class="row">
     <div class="eight columns">
-      <input type='text' ref="inputs" class="input" v-model="input" placeholder="Enter a name" :disabled="error || loading">
+      <input type='text' ref="inputs" class="input" v-model="input" placeholder="Enter a keyword" :disabled="error || loading">
     </div>
     <div class="two columns checkboxes">
       <input type='checkbox' id='indCheckbox' v-model='showIndividuals'>
@@ -30,33 +30,33 @@
   </div>
   <div v-if='isInput && !loading'>
     <div id="ind-table" v-if='showIndividuals'>
-      <h4>Individuals: {{ filteredIndividuals.length }}</h4>
+      <h4>Individuals: {{ sdnList.individuals.length }}</h4>
       <table class="twelve columns">
-        <thead v-if='filteredIndividuals.length > 0'>
+        <thead v-if='sdnList.individuals.length > 0'>
           <tr>
             <th class="name-column">Name</th>
             <th class="info-column">Details</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="individual in filteredIndividuals">
-            <td>{{ individual.lastName }}, {{ individual.firstName }}</td>
+          <tr v-for="individual in sdnList.individuals">
+            <td :class="{ error: individual.score > 90 }">{{ individual.lastName }}, {{ individual.firstName }}</td>
             <td>{{ individual.details }}</td>
           </tr>
         </tbody>
       </table>
     </div>
     <div id="entity-table" v-if='showEntities'>
-      <h4>Entities: {{ filteredEntities.length }}</h4>
+      <h4>Entities: {{ sdnList.entities.length }}</h4>
       <table class="twelve columns">
-        <thead v-if='filteredEntities.length > 0'>
+        <thead v-if='sdnList.entities.length > 0'>
           <tr>
             <th class="name-column">Entity Name</th>
             <th class="info-column">Details</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="entity in filteredEntities">
+          <tr v-for="entity in sdnList.entities">
             <td>{{ entity.name }}</td>
             <td>
               <ul>
@@ -108,8 +108,8 @@ export default {
     getSDNList: function(search) {
       // this.loading = true;
       this.$http.get('http://127.0.0.1:5000/list/' + search).then(response => {
-        this.sdnList.individuals = response.body.individuals;
-        this.sdnList.entities = response.body.entities;
+        this.sdnList = response.body;
+        console.log(this.sdnList.individuals);
         this.loading = false;
         this.error = false;
           Vue.nextTick(() => {  
@@ -121,12 +121,12 @@ export default {
         }
       );
     },
-    updateSearch: throttle(function () {
+    updateSearch: debounce(throttle(function () {
       this.search = this.input;
       if (this.isInput) {
         this.getSDNList(this.search);
       }
-    }, 500),
+    }, 1000), 300),
   },
   computed: {
     filteredIndividuals: function() {
