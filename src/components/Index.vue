@@ -128,7 +128,7 @@ export default {
       if (this.isInput) {
         this.getSDNList(this.search);
       }
-    }, 750), 300),
+    }, 1000), 250),
   },
   computed: {
     isInput: function() {
@@ -185,7 +185,7 @@ input {
   left: 300px;
 }
 .error {
-  color: #d00;
+  color: #a00;
 }
 .input {
   width: 100%;

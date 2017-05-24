@@ -10,7 +10,7 @@ def filter_list(items, search):
 	start_time = time.time()
 	individuals = []
 	for item in items['individuals']:
-		score = fuzz.token_set_ratio(search, item['lastName'])
+		score = fuzz.token_sort_ratio(search, item['lastName'])
 		if score > LEV_CUTOFF:
 			item['score'] = score
 			individuals.append(item)
@@ -21,7 +21,7 @@ def filter_list(items, search):
 
 	entities = []
 	for item in items['entities']:
-		score = fuzz.token_set_ratio(search, item['name'])
+		score = fuzz.token_sort_ratio(search, item['name'])
 		if score > LEV_CUTOFF:
 			item['score'] = score
 			entities.append(item)
